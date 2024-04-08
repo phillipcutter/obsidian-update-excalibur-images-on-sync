@@ -18,7 +18,32 @@ export default class MyPlugin extends Plugin {
 
 		const view = this.app.workspace.getActiveViewOfType(MarkdownView);
 
+		let fileMap = {} // Map of filename to mtime
+
+		const files = this.app.vault.getFiles();
+		for (const file of files) {
+			if (file.path.startsWith("Excalidraw")) {
+				fileMap[file.path] = file.stat.mtime;
+			}
+		}
+
+		const imageModified = (): boolean => {
+			let modified = false;
+			for (const file of files) {
+				if (file.path.startsWith("Excalidraw")) {
+					if (fileMap[file.path] !== file.stat.mtime) {
+						fileMap[file.path] = file.stat.mtime;
+						modified = true;
+					}
+				}
+			}
+			return modified;
+		}
+
 		const updateDrawings = () => {
+			if (!imageModified()) {
+				return;
+			}
 			let i = 0;
 			let line = "non-null";
 			while (i < view?.editor.lineCount()) {
@@ -31,7 +56,6 @@ export default class MyPlugin extends Plugin {
 						view?.editor.setLine(line_num, str);
 					}, 0, i, line);
 				}
-
 				i++;
 			}
 		}
@@ -40,6 +64,7 @@ export default class MyPlugin extends Plugin {
 		const originalSend = WebSocket.prototype.send;
 		window.sockets = [];
 		WebSocket.prototype.send = function(...args) {
+			// console.log("Sent called")
 			if (window.sockets.indexOf(this) === -1) {
 				window.sockets.push(this);
 				this.addEventListener("message", (event) => {

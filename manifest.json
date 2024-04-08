@@ -1,0 +1,11 @@
+{
+	"id": "update-excalibur-images-on-sync",
+	"name": "Update Excalibure Images on Sync",
+	"version": "1.0.0",
+	"minAppVersion": "0.15.0",
+	"description": "Whenever Excalibur syncs (on WS message), reload all wiki embeds on current apge",
+	"author": "Phillip Cutter",
+	"authorUrl": "https://github.com/phillipcutter",
+	"fundingUrl": "",
+	"isDesktopOnly": false
+}

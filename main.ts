@@ -28,10 +28,14 @@ export default class MyPlugin extends Plugin {
 		}
 
 		const imageModified = (): boolean => {
+			const files = this.app.vault.getFiles();
 			let modified = false;
 			for (const file of files) {
 				if (file.path.startsWith("Excalidraw")) {
 					if (fileMap[file.path] !== file.stat.mtime) {
+						fileMap[file.path] = file.stat.mtime;
+						modified = true;
+					} else if (fileMap[file.path] === undefined) {
 						fileMap[file.path] = file.stat.mtime;
 						modified = true;
 					}

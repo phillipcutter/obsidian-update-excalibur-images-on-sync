@@ -22,7 +22,7 @@ export default class MyPlugin extends Plugin {
 
 		const files = this.app.vault.getFiles();
 		for (const file of files) {
-			if (file.path.startsWith("Excalidraw")) {
+			if (file.basename.contains("excalidraw")) {
 				fileMap[file.path] = file.stat.mtime;
 			}
 		}
@@ -31,7 +31,7 @@ export default class MyPlugin extends Plugin {
 			const files = this.app.vault.getFiles();
 			let modified = false;
 			for (const file of files) {
-				if (file.path.startsWith("Excalidraw")) {
+				if (file.basename.contains("excalidraw")) {
 					if (fileMap[file.path] !== file.stat.mtime) {
 						fileMap[file.path] = file.stat.mtime;
 						modified = true;
